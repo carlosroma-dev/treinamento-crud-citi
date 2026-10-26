@@ -77,20 +77,17 @@ Exemplo de corpo para `POST /users`:
 
 ```json
 {
-  "name": "Maria Silva",
-  "email": "maria@citi.org.br",
-  "cpf": "12345678900",
-  "password": "senha123"
+  "nome": "Maria Silva",
+  "conta": "CPF",
+  "documento": "12345678900"
 }
 ```
 
 Para o `PATCH`, envie só o que vai mudar:
 
 ```json
-{ "name": "Maria S. Silva" }
+{ "nome": "Maria S. Silva" }
 ```
-
-> A senha é salva criptografada (bcrypt) e **nunca** é devolvida nas respostas.
 
 ---
 
@@ -103,7 +100,6 @@ Para o `PATCH`, envie só o que vai mudar:
 | `204 No Content` | Deu certo e não há corpo (ex.: delete) |
 | `400 Bad Request` | O cliente mandou dados faltando ou inválidos |
 | `404 Not Found` | O recurso (id) não existe |
-| `409 Conflict` | Viola uma regra de unicidade (e-mail ou CPF repetido) |
 | `500 Internal Server Error` | Erro inesperado do nosso lado |
 
 ---
