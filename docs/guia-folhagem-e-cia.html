@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guia do Desafio — Folhagem & Cia</title>
+<style>
+  :root {
+    --verde: #2f6b3f;
+    --verde-claro: #e8f2ea;
+    --texto: #1f2421;
+    --suave: #5b635e;
+    --borda: #d5dcd7;
+    --codigo: #f4f6f4;
+    --alerta: #fdf1e3;
+    --alerta-borda: #e0a458;
+    --erro: #fbe9e9;
+    --erro-borda: #d16a6a;
+  }
+  @page {
+    size: A4;
+    margin: 18mm 16mm 20mm;
+    @bottom-left { content: "Folhagem & Cia · Guia do desafio · Treinamento de CRUD CITi"; font: 8pt system-ui, sans-serif; color: #5b635e; }
+    @bottom-right { content: counter(page) " / " counter(pages); font: 8pt system-ui, sans-serif; color: #5b635e; }
+  }
+  @page :first { @bottom-left { content: none; } @bottom-right { content: none; } }
+  * { box-sizing: border-box; }
+  body { font: 10.5pt/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--texto); background: #fff; margin: 0; }
+  h1, h2, h3 { color: var(--verde); line-height: 1.25; }
+  h2 { font-size: 18pt; margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--verde); break-before: page; }
+  h3 { font-size: 12.5pt; margin: 20px 0 6px; break-after: avoid; }
+  p { margin: 6px 0 10px; }
+  ul, ol { margin: 6px 0 10px; padding-left: 22px; }
+  li { margin: 3px 0; }
+  code { font: 9pt/1.4 Consolas, "Cascadia Code", monospace; background: var(--codigo); padding: 1px 4px; border-radius: 3px; }
+  pre { background: var(--codigo); border: 1px solid var(--borda); border-radius: 6px; padding: 10px 12px; overflow: hidden; white-space: pre-wrap; break-inside: avoid; margin: 8px 0 12px; }
+  pre code { background: none; padding: 0; font-size: 8.8pt; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0 14px; font-size: 9.5pt; break-inside: auto; }
+  tr { break-inside: avoid; }
+  th, td { border: 1px solid var(--borda); padding: 5px 8px; text-align: left; vertical-align: top; }
+  th { background: var(--verde-claro); color: var(--verde); }
+  .caixa { border-left: 4px solid var(--verde); background: var(--verde-claro); padding: 8px 12px; border-radius: 0 6px 6px 0; margin: 10px 0 14px; break-inside: avoid; }
+  .caixa.alerta { border-color: var(--alerta-borda); background: var(--alerta); }
+  .caixa.erro { border-color: var(--erro-borda); background: var(--erro); }
+  .caixa strong:first-child { display: block; margin-bottom: 2px; }
+  .passo { display: inline-block; background: var(--verde); color: #fff; font-size: 8.5pt; font-weight: 700; padding: 1px 8px; border-radius: 10px; margin-right: 6px; vertical-align: 2px; }
+  .capa { height: 255mm; display: flex; flex-direction: column; justify-content: center; }
+  .capa .selo { font-size: 9pt; letter-spacing: .12em; color: var(--suave); font-weight: 600; }
+  .capa h1 { font-size: 34pt; margin: 8px 0 4px; }
+  .capa .sub { font-size: 13pt; color: var(--suave); max-width: 135mm; }
+  .stack { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .stack span { border: 1px solid var(--borda); border-radius: 12px; padding: 2px 10px; font-size: 9pt; }
+  .fluxo { display: flex; align-items: stretch; gap: 6px; margin: 12px 0 14px; break-inside: avoid; }
+  .fluxo div { flex: 1; border: 1px solid var(--borda); border-radius: 6px; padding: 6px 8px; text-align: center; font-size: 9pt; }
+  .fluxo div b { display: block; color: var(--verde); font-size: 10pt; }
+  .fluxo .seta { flex: 0 0 auto; border: 0; padding: 0; align-self: center; color: var(--suave); }
+  .check li { list-style: none; margin-left: -18px; }
+  @media screen {
+    body { max-width: 820px; margin: 0 auto; padding: 24px 16px 48px; }
+    .capa { height: auto; padding: 48px 0; }
+    h2 { margin-top: 48px; }
+  }
+  .check li::before { content: "☐ "; color: var(--verde); }
+</style>
+</head>
+<body>
+
+<section class="capa">
+  <div class="selo">TREINAMENTO DE BACK-END · CITI</div>
+  <h1>🌿 Guia do desafio<br>Folhagem &amp; Cia</h1>
+  <p class="sub">Conceitos, passo a passo, armadilhas e testes para construir a API da loja de plantas.</p>
+  <div class="stack"><span>Node.js</span><span>Express</span><span>TypeScript</span><span>Prisma</span><span>PostgreSQL</span><span>Docker</span></div>
+
+  <table style="margin-top:28px">
+    <tr><th>Onde está cada coisa</th><th></th></tr>
+    <tr><td><code>DESAFIO.md</code></td><td>O enunciado oficial: entidade <code>Planta</code>, rotas, regras de negócio, bônus, entregáveis e avaliação</td></tr>
+    <tr><td><code>README.md</code></td><td>Como instalar e rodar o projeto, comandos do dia a dia e erros de ambiente</td></tr>
+    <tr><td>Este guia</td><td>Como construir: conceitos, leitura do CRUD de usuário, passo a passo, testes e armadilhas</td></tr>
+  </table>
+
+  <div class="caixa">
+    <strong>💡 O segredo do desafio</strong>
+    O repositório já vem com um CRUD de usuários pronto e funcionando. Quase tudo que você precisa fazer nas plantas tem um equivalente nos usuários: abra os dois lado a lado e vá adaptando. Entender o exemplo vale mais do que copiá-lo.
+  </div>
+
+  <table>
+    <tr><th>Se você…</th><th>Leia</th></tr>
+    <tr><td>nunca fez uma API</td><td>O guia inteiro, na ordem</td></tr>
+    <tr><td>já sabe o que é uma API</td><td>Partes 2 (o projeto) e 3 (passo a passo)</td></tr>
+    <tr><td>travou em algum erro</td><td>Parte 5 (armadilhas) e os problemas comuns do README</td></tr>
+    <tr><td>está quase entregando</td><td>Parte 6 (antes de entregar)</td></tr>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<h2>1 · Conceitos básicos</h2>
+
+<h3>O que é uma API?</h3>
+<p>Pense num restaurante. Você não entra na cozinha: faz o pedido ao garçom, que leva até a cozinha e volta com o prato.</p>
+<div class="fluxo">
+  <div><b>Cliente</b>site, app, Thunder Client</div><div class="seta">⇄</div>
+  <div><b>API</b>o garçom: o nosso código</div><div class="seta">⇄</div>
+  <div><b>Banco de dados</b>a cozinha: PostgreSQL</div>
+</div>
+<p>A API recebe o pedido (a <b>requisição</b>), confere se faz sentido, busca ou grava no banco e devolve uma <b>resposta</b>. O cliente nunca fala direto com o banco.</p>
+
+<h3>CRUD</h3>
+<table>
+  <tr><th>Letra</th><th>Operação</th><th>Método HTTP</th><th>Função do Prisma</th></tr>
+  <tr><td>C</td><td>Create (criar)</td><td><code>POST</code></td><td><code>create</code></td></tr>
+  <tr><td>R</td><td>Read (ler)</td><td><code>GET</code></td><td><code>findMany</code>, <code>findUnique</code></td></tr>
+  <tr><td>U</td><td>Update (atualizar)</td><td><code>PATCH</code></td><td><code>update</code></td></tr>
+  <tr><td>D</td><td>Delete (deletar)</td><td><code>DELETE</code></td><td><code>delete</code></td></tr>
+</table>
+<div class="caixa"><strong>📘 PATCH ou PUT?</strong>O PUT substitui o recurso inteiro. O PATCH altera só o que você mandar. Aqui usamos PATCH: se o corpo tiver só <code>{ "preco": 9990 }</code>, só o preço muda.</div>
+
+<h3>Anatomia de uma requisição</h3>
+<pre><code>PATCH  http://localhost:3001/plantas/3?avisar=true
+Content-Type: application/json
+
+{ "preco": 9990 }</code></pre>
+<table>
+  <tr><th>Onde</th><th>No exemplo</th><th>Como ler no Express</th><th>Para que serve</th></tr>
+  <tr><td>Params (parte da rota)</td><td><code>3</code></td><td><code>req.params.id</code></td><td>Identificar o recurso</td></tr>
+  <tr><td>Query string (depois do <code>?</code>)</td><td><code>avisar=true</code></td><td><code>req.query.avisar</code></td><td>Opções e filtros</td></tr>
+  <tr><td>Body (corpo)</td><td><code>{ "preco": 9990 }</code></td><td><code>req.body.preco</code></td><td>Os dados a criar ou mudar</td></tr>
+</table>
+<div class="caixa alerta"><strong>⚠ Params e query string são sempre texto</strong>Em <code>/plantas/3</code>, <code>req.params.id</code> é a string <code>"3"</code>. Em <code>?petFriendly=true</code>, o valor é a string <code>"true"</code>. Você vai precisar converter. Já o body, por ser JSON, mantém os tipos.</div>
+
+<h3>Status HTTP</h3>
+<table>
+  <tr><th>Status</th><th>Quando usar</th><th>Exemplo no desafio</th></tr>
+  <tr><td><code>200 OK</code></td><td>Deu certo e há algo para devolver</td><td>Listar, buscar, editar, vender</td></tr>
+  <tr><td><code>201 Created</code></td><td>Algo novo foi criado</td><td>Cadastrar planta</td></tr>
+  <tr><td><code>204 No Content</code></td><td>Deu certo e não há corpo</td><td>Deletar planta</td></tr>
+  <tr><td><code>400 Bad Request</code></td><td>O cliente mandou dados faltando ou inválidos</td><td>Preço negativo, venda sem estoque</td></tr>
+  <tr><td><code>404 Not Found</code></td><td>O recurso pedido não existe</td><td>Buscar a planta 999</td></tr>
+  <tr><td><code>500 Internal Server Error</code></td><td>Algo inesperado quebrou do nosso lado</td><td>O banco caiu</td></tr>
+</table>
+<div class="caixa"><strong>💡 Regra de bolso</strong>2xx: deu certo. 4xx: a culpa é de quem pediu. 5xx: a culpa é nossa. Por isso o <code>catch</code> genérico responde 500, nunca 400.</div>
+
+<h3>JSON e tipos</h3>
+<pre><code>{
+  "nome": "Jiboia",          // string: entre aspas duplas
+  "preco": 3490,             // número: SEM aspas
+  "petFriendly": false,      // booleano: SEM aspas
+  "luminosidade": "SOMBRA"   // enum: chega como string
+}</code></pre>
+<p><code>"preco": "3490"</code> é texto, não número, e uma API bem validada recusa com 400. JSON não aceita comentários: os <code>//</code> acima são só explicação.</p>
+
+<h3><code>async</code>/<code>await</code> e <code>try</code>/<code>catch</code></h3>
+<p>Falar com o banco leva tempo, então o Prisma devolve uma <b>Promise</b>. O <code>await</code> espera o resultado e só pode ser usado dentro de uma função <code>async</code>. O <code>try</code>/<code>catch</code> garante que, se algo der errado, a API responde 500 em vez de deixar o cliente esperando.</p>
+<pre><code>export const readAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await UserRepository.findAllUsers(); // espera o banco responder
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error(error);                              // mostra o erro no terminal
+    return res.status(500).json({ message: "Erro ao buscar usuários." });
+  }
+};</code></pre>
+
+<!-- ============================================================ -->
+<h2>2 · Entendendo o projeto</h2>
+
+<p>Para instalar e rodar, siga o <code>README.md</code>. No desafio, você vai mexer em <code>prisma/schema.prisma</code> e <code>src/routes.ts</code> e criar dois arquivos: <code>src/repositories/PlantaRepository.ts</code> e <code>src/controllers/PlantaController.ts</code>.</p>
+
+<h3>As camadas</h3>
+<div class="fluxo">
+  <div><b>routes.ts</b>qual função chamar?</div><div class="seta">→</div>
+  <div><b>Controller</b>lê, valida e escolhe o status</div><div class="seta">→</div>
+  <div><b>Repository</b>a única camada que usa o Prisma</div><div class="seta">→</div>
+  <div><b>Banco</b>PostgreSQL</div>
+</div>
+<table>
+  <tr><th>Camada</th><th>Faz</th><th>Não faz</th></tr>
+  <tr><td>routes</td><td>Diz que <code>POST /plantas</code> chama <code>createPlanta</code></td><td>Nenhuma lógica ou validação</td></tr>
+  <tr><td>controller</td><td>Lê <code>req</code>, valida, decide o status, monta a resposta</td><td>Não usa o <code>prisma</code> diretamente</td></tr>
+  <tr><td>repository</td><td>Faz as consultas com o Prisma</td><td>Não conhece <code>req</code> nem <code>res</code>, não decide status</td></tr>
+</table>
+
+<h3>Lendo o CRUD de usuário</h3>
+<p><b>O model</b>, em <code>prisma/schema.prisma</code>: cada model vira uma tabela, e cada linha, uma coluna.</p>
+<pre><code>model User {
+  id        Int      @id @default(autoincrement())  // chave primária: 1, 2, 3...
+  nome      String
+  conta     Conta                                   // enum: CPF ou CNPJ
+  documento String   @unique                        // não pode repetir
+  createdAt DateTime @default(now())                // preenchido na criação
+  updatedAt DateTime @updatedAt                     // atualizado a cada edição
+}</code></pre>
+
+<p><b>As rotas</b>, em <code>src/routes.ts</code>: a URL é o recurso no plural, e o que muda é o método.</p>
+<pre><code>routes.post("/users", UserController.createUser);
+routes.get("/users", UserController.readAllUsers);
+routes.get("/users/:id", UserController.readUserById);
+routes.patch("/users/:id", UserController.updateUser);
+routes.delete("/users/:id", UserController.deleteUser);</code></pre>
+
+<p><b>O repository</b>: funções pequenas, uma consulta cada. <code>Prisma.UserCreateInput</code> é um tipo gerado a partir do model, e o TypeScript avisa se faltar campo ou o tipo estiver errado.</p>
+<pre><code>export const findUserById = async (id: number) => {
+  return await prisma.user.findUnique({
+    where: { id: id },
+  });
+};</code></pre>
+
+<p><b>O controller</b>: quase todo handler segue <b>ler → validar → chamar o repository → responder</b>. Cada problema tem seu <code>return</code> com um status, e o caminho feliz fica no final.</p>
+<pre><code>export const createUser = async (req: Request, res: Response) => {
+  try {
+    const { nome, conta, documento } = req.body;           // ① lê
+
+    if (!nome || !conta || !documento) {                   // ② valida
+      return res.status(400).json({ message: "Preencha nome, conta e documento." });
+    }
+
+    const user = await UserRepository.createUser({         // ③ grava
+      nome: nome, conta: conta, documento: documento,
+    });
+
+    return res.status(201).json(user);                     // ④ responde
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Erro ao criar usuário." });
+  }
+};</code></pre>
+<div class="caixa"><strong>💡 Experimente antes de codar</strong>Chame todas as rotas de <code>/users</code> no Thunder Client, incluindo os erros: um id que não existe, um corpo vazio, um cadastro sem a conta. Ver as respostas ajuda muito a entender o código.</div>
+
+<!-- ============================================================ -->
+<h2>3 · Passo a passo</h2>
+<p>Os campos, as rotas e as regras estão no <code>DESAFIO.md</code>. Siga a ordem abaixo e faça um commit ao fim de cada passo.</p>
+
+<h3><span class="passo">PASSO 1</span>O model e o enum</h3>
+<p>Em <code>prisma/schema.prisma</code>, crie o enum <code>Luminosidade</code> e o model <code>Planta</code>. A sintaxe, com outro tema:</p>
+<pre><code>enum Tamanho {
+  PEQUENO
+  MEDIO
+  GRANDE
+}
+
+model Camiseta {
+  id        Int      @id @default(autoincrement())
+  cor       String
+  tamanho   Tamanho                                 // usa o enum como tipo
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}</code></pre>
+<ul class="check">
+  <li>Os nomes dos campos estão exatamente como no enunciado (<code>regaACadaDias</code>, com as maiúsculas no lugar)?</li>
+  <li><code>preco</code> é <code>Int</code>, e não <code>Float</code>? Em centavos, as contas com dinheiro são exatas (em JavaScript, <code>0.1 + 0.2</code> dá <code>0.30000000000000004</code>).</li>
+  <li>Tem <code>createdAt</code> e <code>updatedAt</code>, como no <code>User</code>?</li>
+</ul>
+
+<h3><span class="passo">PASSO 2</span>A migration</h3>
+<pre><code>yarn migration
+# Enter a name for the new migration: › create_planta_model</code></pre>
+<p>A migration é um arquivo SQL em <code>prisma/migrations/</code> que descreve a mudança no banco. Ela também atualiza os tipos do Prisma Client: depois dela, <code>prisma.planta</code> aparece no autocompletar. Confira com <code>yarn studio</code>.</p>
+<div class="caixa erro"><strong>🚫 Errou o model? Não edite a migration</strong>Corrija o <code>schema.prisma</code> e rode <code>yarn migration</code> de novo, com um nome como <code>fix_planta_preco</code>. As migrations vão para o git: são o "histórico de commits" do banco.</div>
+
+<h3><span class="passo">PASSO 3</span>O repository</h3>
+<p>Crie <code>src/repositories/PlantaRepository.ts</code> usando o <code>UserRepository.ts</code> como modelo. Use <code>Prisma.PlantaCreateInput</code> e <code>Prisma.PlantaUpdateInput</code> como tipo do <code>data</code>.</p>
+<table>
+  <tr><th>Função</th><th>O que faz</th><th>Prisma</th></tr>
+  <tr><td><code>createPlanta(data)</code></td><td>Cria uma planta</td><td><code>create</code></td></tr>
+  <tr><td><code>findAllPlantas(filtros)</code></td><td>Lista, aplicando os filtros que vierem</td><td><code>findMany</code> + <code>where</code></td></tr>
+  <tr><td><code>findPlantaById(id)</code></td><td>Busca uma planta ou devolve <code>null</code></td><td><code>findUnique</code></td></tr>
+  <tr><td><code>updatePlanta(id, data)</code></td><td>Edita uma planta</td><td><code>update</code></td></tr>
+  <tr><td><code>deletePlanta(id)</code></td><td>Remove uma planta</td><td><code>delete</code></td></tr>
+  <tr><td><code>venderPlanta(id, quantidade)</code></td><td>Diminui o estoque (passo 7)</td><td><code>update</code></td></tr>
+  <tr><td><code>calcularValorDoEstoque()</code></td><td>Soma o valor do estoque (passo 8)</td><td><code>findMany</code></td></tr>
+</table>
+
+<h3><span class="passo">PASSO 4</span>O controller: validações</h3>
+<p>Crie <code>src/controllers/PlantaController.ts</code>. É o passo com mais detalhes.</p>
+
+<p><b>Convertendo e validando o id.</b> Se repetir em várias funções, vale criar uma função auxiliar no topo do arquivo.</p>
+<pre><code>const id = Number(req.params.id);     // "3" vira 3; "abc" vira NaN
+if (!Number.isInteger(id) || id &lt;= 0) {
+  return res.status(400).json({ message: "O id precisa ser um número inteiro positivo." });
+}</code></pre>
+
+<div class="caixa alerta"><strong>⚠ A armadilha mais importante: <code>!campo</code></strong>
+No <code>UserController</code>, <code>!nome || !conta</code> funciona porque todos os campos são textos. Nas plantas, quebra:
+<table style="margin:8px 0 4px">
+  <tr><th>Valor recebido</th><th><code>!valor</code></th><th>É válido na planta?</th></tr>
+  <tr><td><code>undefined</code> (não enviado)</td><td>true</td><td>❌ Precisa recusar</td></tr>
+  <tr><td><code>0</code> (estoque zero)</td><td>true</td><td>✅ Planta esgotada é válida</td></tr>
+  <tr><td><code>false</code> (petFriendly)</td><td>true</td><td>✅ Planta tóxica para pets é válida</td></tr>
+</table>
+Para saber se um campo foi enviado, compare com <code>undefined</code>: <code>if (estoque === undefined)</code>.</div>
+
+<p><b>Validando tipos e regras.</b> Depois de garantir que o campo veio, confira o tipo e o valor:</p>
+<table>
+  <tr><th>Para validar…</th><th>Use</th></tr>
+  <tr><td>Texto não vazio</td><td><code>typeof nome === "string" &amp;&amp; nome.trim() !== ""</code></td></tr>
+  <tr><td>Inteiro (recusa <code>"8990"</code>, <code>89.9</code> e <code>NaN</code>)</td><td><code>Number.isInteger(preco)</code></td></tr>
+  <tr><td>Booleano</td><td><code>typeof petFriendly === "boolean"</code></td></tr>
+  <tr><td>Valor do enum</td><td><code>Object.values(Luminosidade).includes(luminosidade)</code>, com <code>import { Luminosidade } from "@prisma/client"</code></td></tr>
+</table>
+<p>Combinando com as regras: <code>!Number.isInteger(preco) || preco &lt;= 0</code> significa "preço inválido". Escreva uma checagem para cada regra, cada uma com uma mensagem clara.</p>
+
+<p><b>POST x PATCH.</b> No cadastro, todos os campos são obrigatórios; na edição, nenhum é, mas os que vierem passam pelas mesmas regras. Uma função que valida só os campos enviados (pulando os <code>undefined</code>) serve para os dois. No POST, antes dela, confira se nenhum campo está faltando.</p>
+
+<p><b>404 antes de editar ou deletar.</b> Busque a planta primeiro e responda 404 se não existir. Sem isso, o erro do Prisma cai no <code>catch</code> e vira um 500 errado.</p>
+
+<p><b>Não passe <code>req.body</code> direto para o banco.</b> O cliente poderia mandar campos que você não espera, como <code>id</code> ou <code>createdAt</code>.</p>
+<pre><code>// ✅ você escolhe exatamente o que vai para o banco
+const { nome, especie, preco, estoque, luminosidade, petFriendly, regaACadaDias } = req.body;
+await PlantaRepository.createPlanta({ nome, especie, preco, estoque, luminosidade, petFriendly, regaACadaDias });</code></pre>
+
+<h3><span class="passo">PASSO 5</span>As rotas</h3>
+<p>Importe o controller e registre as rotas em <code>src/routes.ts</code>. O Express usa a <b>primeira</b> rota que combinar, então rotas fixas vêm antes das que têm parâmetro:</p>
+<pre><code>routes.get("/plantas/esgotadas", PlantaController.readPlantasEsgotadas);  // ✅ antes
+routes.get("/plantas/:id", PlantaController.readPlantaById);</code></pre>
+<p>Na ordem inversa, <code>GET /plantas/esgotadas</code> chama <code>readPlantaById</code> com <code>id = "esgotadas"</code>.</p>
+
+<h3><span class="passo">PASSO 6</span>Filtros na listagem</h3>
+<p><code>GET /plantas?luminosidade=SOMBRA&amp;petFriendly=true</code> chega em <code>req.query</code>. Filtro não enviado é <code>undefined</code>, e no <code>where</code> do Prisma condições <code>undefined</code> são ignoradas: uma única consulta resolve todas as combinações.</p>
+<pre><code>// exemplo com usuários: se nome for undefined, lista todo mundo
+prisma.user.findMany({
+  where: { nome: nome },
+});</code></pre>
+<ul>
+  <li><b>Converta o booleano:</b> <code>petFriendly === "true"</code>, sem transformar um filtro não enviado em <code>false</code>.</li>
+  <li><b>Valide:</b> <code>?luminosidade=LUA</code> ou <code>?petFriendly=talvez</code> retornam 400.</li>
+  <li><b>Filtro sem resultado não é erro:</b> é 200 com <code>[]</code>, não 404.</li>
+</ul>
+<div class="caixa"><strong>💡 Para os bônus</strong>Pesquise na documentação do Prisma por <code>contains</code> com <code>mode: "insensitive"</code> (busca) e por <code>orderBy</code> (ordenação).</div>
+
+<h3><span class="passo">PASSO 7</span>A venda</h3>
+<ol>
+  <li>Valide o id → 400.</li>
+  <li>Valide a <code>quantidade</code>: inteiro maior que zero → 400.</li>
+  <li>Busque a planta → 404.</li>
+  <li>Confira <code>planta.estoque &gt;= quantidade</code> → senão 400, sem alterar nada. Para mensagens com variáveis, use crase: <code>`Temos só ${planta.estoque} vasos`</code>.</li>
+  <li>Diminua o estoque. O Prisma faz a conta: <code>data: { estoque: { decrement: quantidade } }</code>.</li>
+  <li>Responda 200 com a planta atualizada.</li>
+</ol>
+<div class="caixa"><strong>📘 Para pensar (não é obrigatório)</strong>E se duas pessoas comprarem o último vaso ao mesmo tempo? As duas podem passar pelo item 4 antes de qualquer uma chegar ao 5. Pesquise sobre <code>updateMany</code> com condição no <code>where</code>. Se resolver, conte no documento da API.</div>
+
+<h3><span class="passo">PASSO 8</span>O valor total do estoque</h3>
+<p>Para cada planta, <code>preco × estoque</code>; depois, some tudo.</p>
+<table>
+  <tr><th>Planta</th><th>preco</th><th>estoque</th><th>preco × estoque</th></tr>
+  <tr><td>Jiboia</td><td>3490</td><td>10</td><td>34900</td></tr>
+  <tr><td>Calathea</td><td>7990</td><td>2</td><td>15980</td></tr>
+  <tr><th>Total</th><th></th><th>12 vasos</th><th>50880 (R$ 508,80)</th></tr>
+</table>
+<p>O <code>aggregate</code> do Prisma soma uma coluna, mas não uma multiplicação de colunas. Busque as plantas (só <code>preco</code> e <code>estoque</code>, com <code>select</code>) e some no código, com <code>for</code> ou <code>reduce</code>. Com a loja vazia, a resposta é 200 com os valores zerados.</p>
+
+<!-- ============================================================ -->
+<h2>4 · Testes</h2>
+<p>Crie uma coleção "Folhagem &amp; Cia" no Thunder Client com uma requisição por rota, corpo em JSON. A maior parte da avaliação está nos casos de erro.</p>
+<pre><code>{
+  "nome": "Costela-de-adão",
+  "especie": "Monstera deliciosa",
+  "preco": 8990,
+  "estoque": 12,
+  "luminosidade": "MEIA_SOMBRA",
+  "petFriendly": false,
+  "regaACadaDias": 7
+}</code></pre>
+<table>
+  <tr><th>Teste</th><th>Esperado</th></tr>
+  <tr><td>Cadastrar uma planta válida, inclusive com <code>estoque: 0</code> e <code>petFriendly: false</code></td><td>201</td></tr>
+  <tr><td>Cadastrar sem um campo, com <code>preco: 0</code>, <code>estoque: -1</code>, <code>regaACadaDias: 0</code>, <code>preco: "8990"</code> ou <code>luminosidade: "LUA"</code></td><td>400</td></tr>
+  <tr><td>Listar todas as plantas</td><td>200 + array</td></tr>
+  <tr><td>Buscar um id que existe / que não existe / <code>abc</code></td><td>200 / 404 / 400</td></tr>
+  <tr><td>Editar só o preço (o resto não muda) / com valor inválido / id inexistente</td><td>200 / 400 / 404</td></tr>
+  <tr><td>Filtrar por luminosidade, por petFriendly e pelos dois / filtro inválido</td><td>200 / 400</td></tr>
+  <tr><td>Vender o que tem / mais do que tem (o estoque não muda) / <code>quantidade: 0</code> / id inexistente</td><td>200 / 400 / 400 / 404</td></tr>
+  <tr><td>Valor total (confira a conta na mão)</td><td>200</td></tr>
+  <tr><td>Deletar / buscar a planta deletada / deletar de novo</td><td>204 / 404 / 404</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>5 · Armadilhas comuns</h2>
+<p>Para erros de instalação e Docker, veja a tabela de problemas comuns do <code>README.md</code>. Estes são os erros de código que mais aparecem:</p>
+<table>
+  <tr><th>Erro</th><th>Como aparece</th><th>Como evitar</th></tr>
+  <tr><td>Validar com <code>!campo</code></td><td>Estoque 0 ou <code>petFriendly: false</code> são recusados</td><td><code>campo === undefined</code> (passo 4)</td></tr>
+  <tr><td>404 virando 500</td><td>Editar ou deletar id inexistente responde 500</td><td>Busque antes e responda 404</td></tr>
+  <tr><td><code>catch</code> respondendo 400</td><td>Erro do servidor tratado como erro do cliente</td><td>No <code>catch</code> genérico, 500</td></tr>
+  <tr><td>Venda deixa estoque negativo</td><td>Vender 10 quando tem 3 funciona</td><td>Cheque <code>estoque &gt;= quantidade</code></td></tr>
+  <tr><td>Filtro como string</td><td><code>?petFriendly=true</code> dá erro no Prisma</td><td>Converta <code>"true"</code> para <code>true</code></td></tr>
+  <tr><td>Id sem conversão</td><td>Prisma reclama de string onde esperava Int</td><td><code>Number(req.params.id)</code> e valide</td></tr>
+  <tr><td>Lista vazia como 404</td><td>Filtro sem resultado responde 404</td><td>Lista vazia é 200 com <code>[]</code></td></tr>
+  <tr><td><code>"${variavel}"</code> com aspas</td><td>A mensagem mostra o texto <code>${variavel}</code></td><td>Use crase</td></tr>
+  <tr><td>Esquecer o <code>return</code></td><td><code>Cannot set headers after they are sent</code></td><td>Todo <code>res.status(...)</code> dentro de <code>if</code> leva <code>return</code></td></tr>
+  <tr><td>Esquecer o <code>await</code></td><td>Resposta <code>{}</code> ou <code>if (!planta)</code> que nunca é verdadeiro</td><td>Toda chamada ao repository leva <code>await</code></td></tr>
+  <tr><td><code>req.body</code> direto no banco</td><td>O cliente consegue mandar <code>id</code>, <code>createdAt</code>…</td><td>Desestruture e passe campo a campo</td></tr>
+  <tr><td>Nomes diferentes do enunciado</td><td><code>price</code>, <code>stock</code>, <code>/plants</code></td><td>Use exatamente os nomes do <code>DESAFIO.md</code></td></tr>
+  <tr><td><code>Cannot find module '@controllers/...'</code></td><td>A API não sobe</td><td>O nome no <code>import</code> precisa bater com o arquivo (letras e o <code>s</code> no final)</td></tr>
+  <tr><td><code>PlantaController is not defined</code></td><td>A API não sobe</td><td>Importe o controller no <code>routes.ts</code></td></tr>
+  <tr><td><code>Property 'planta' does not exist</code></td><td>Erro de tipo no repository</td><td><code>yarn migration</code> e <b>Restart TS Server</b> no VS Code</td></tr>
+</table>
+
+<!-- ============================================================ -->
+<h2>6 · Antes de entregar</h2>
+<p>Os entregáveis e os critérios de avaliação estão no <code>DESAFIO.md</code>. Confira:</p>
+<ul class="check">
+  <li>O projeto sobe do zero com <code>docker compose up -d --build</code> e <code>yarn migration</code></li>
+  <li>A migration da <code>Planta</code> está commitada em <code>prisma/migrations</code></li>
+  <li>Todos os testes da parte 4 passam</li>
+  <li>Os nomes de campos e rotas estão exatamente como no enunciado</li>
+  <li><code>yarn typecheck</code> termina sem erros</li>
+  <li>Não há <code>console.log</code> de teste, imports sem uso ou código comentado (o <code>console.error</code> do <code>catch</code> pode ficar)</li>
+  <li>O <code>.env</code> não foi commitado</li>
+  <li>O documento da API está completo e bate com o que a API faz</li>
+</ul>
+
+<h3>Nomes</h3>
+<table>
+  <tr><th>O quê</th><th>Padrão</th><th>Exemplo</th></tr>
+  <tr><td>Variáveis e funções</td><td>camelCase</td><td><code>plantaAtualizada</code>, <code>findPlantaById</code></td></tr>
+  <tr><td>Arquivos de controller e repository</td><td>PascalCase + sufixo</td><td><code>PlantaController.ts</code></td></tr>
+  <tr><td>Rotas</td><td>minúsculas, plural, hífen</td><td><code>/plantas</code>, <code>/valor-total</code></td></tr>
+  <tr><td>Valores de enum</td><td>MAIÚSCULAS com <code>_</code></td><td><code>MEIA_SOMBRA</code></td></tr>
+</table>
+
+<h3>Commits</h3>
+<p>Um commit por passo concluído, com mensagens que dizem o que mudou. Evite "ajustes", "agora vai" ou "final final 2": o histórico também é avaliado.</p>
+<pre><code>git commit -m "Cria model Planta e enum Luminosidade"
+git commit -m "Adiciona validações de preço, estoque e luminosidade"
+git commit -m "Implementa a rota de venda"</code></pre>
+
+<h3>Travou? Como pedir ajuda</h3>
+<p>Pedir ajuda não tira ponto. Antes, tente uns 20 minutos: leia o erro com calma, veja os logs (<code>docker compose logs -f server</code>), compare com o CRUD de usuário e releia a parte 5. Ao pedir ajuda, mande o que queria que acontecesse, o que aconteceu (erro completo ou print), o que já tentou e o trecho de código.</p>
+<p>Documentações: <code>prisma.io/docs</code>, <code>expressjs.com/pt-br</code> e <code>developer.mozilla.org</code> (status HTTP).</p>
+
+<!-- ============================================================ -->
+<h2>7 · Glossário</h2>
+<table>
+  <tr><th>Termo</th><th>Significado</th></tr>
+  <tr><td>API</td><td>O programa que recebe requisições e devolve respostas. O "garçom" entre o cliente e o banco.</td></tr>
+  <tr><td>Rota (endpoint)</td><td>Método + URL que a API atende, como <code>GET /plantas</code>.</td></tr>
+  <tr><td>Requisição / resposta</td><td>O pedido do cliente (método, URL, params, query, body) e o que a API devolve (status + JSON).</td></tr>
+  <tr><td>Params / query / body</td><td>Parte variável da URL (<code>req.params</code>), o que vem depois do <code>?</code> (<code>req.query</code>) e os dados enviados (<code>req.body</code>).</td></tr>
+  <tr><td>Express</td><td>Biblioteca do Node.js para criar servidores e rotas HTTP.</td></tr>
+  <tr><td>Prisma (ORM)</td><td>Ferramenta para falar com o banco usando TypeScript em vez de SQL.</td></tr>
+  <tr><td>Model</td><td>A definição de uma tabela no <code>schema.prisma</code>.</td></tr>
+  <tr><td>Enum</td><td>Tipo que só aceita uma lista fechada de valores, como <code>SOMBRA | MEIA_SOMBRA | SOL_PLENO</code>.</td></tr>
+  <tr><td>Migration</td><td>Arquivo que registra uma mudança na estrutura do banco.</td></tr>
+  <tr><td>Controller / repository</td><td>A camada que valida e responde / a camada que consulta o banco.</td></tr>
+  <tr><td>Docker / container</td><td>Roda a API e o banco em ambientes isolados, iguais em qualquer máquina.</td></tr>
+  <tr><td>Seed</td><td>Script que preenche o banco com dados de exemplo.</td></tr>
+</table>
+
+<div class="caixa" style="margin-top:24px"><strong>🌿 Boa sorte e boas regas!</strong>Faça com calma, teste cada passo e capriche nos casos de erro. É neles que uma API mostra que foi bem feita.</div>
+
+</body>
+</html>

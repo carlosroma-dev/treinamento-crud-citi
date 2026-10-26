@@ -4,7 +4,7 @@ A **Folhagem & Cia** vende plantas pela internet e controla tudo numa planilha. 
 
 O CRUD de usuários deste repositório (`UserController.ts` e `UserRepository.ts`) é o modelo: quase tudo que vocês vão fazer nas plantas tem um equivalente lá.
 
-> 📄 O enunciado completo, com dicas e erros comuns, está em [`docs/desafio-folhagem-e-cia.pdf`](docs/desafio-folhagem-e-cia.pdf).
+**Para começar:** crie o **seu** repositório pelo botão **Use this template → Create a new repository** no GitHub, clone e siga o [README](README.md) para rodar. O passo a passo, as armadilhas mais comuns e a lista de testes estão no [guia](docs/guia-folhagem-e-cia.pdf).
 
 ---
 
@@ -17,7 +17,7 @@ O CRUD de usuários deste repositório (`UserController.ts` e `UserRepository.ts
 | `especie` | String | `"Monstera deliciosa"` | Nome científico |
 | `preco` | Int | `8990` | Em **centavos** (`8990` = R$ 89,90) |
 | `estoque` | Int | `12` | Vasos disponíveis |
-| `luminosidade` | Enum | `"MEIA_SOMBRA"` | `SOMBRA`, `MEIA_SOMBRA` ou `SOL_PLENO` |
+| `luminosidade` | Enum `Luminosidade` | `"MEIA_SOMBRA"` | `SOMBRA`, `MEIA_SOMBRA` ou `SOL_PLENO` |
 | `petFriendly` | Boolean | `true` | Segura para cães e gatos? |
 | `regaACadaDias` | Int | `3` | De quantos em quantos dias regar |
 | `createdAt` / `updatedAt` | DateTime | | Automáticos, como no `User` |
@@ -36,6 +36,8 @@ O CRUD de usuários deste repositório (`UserController.ts` e `UserRepository.ts
 | `POST` | `/plantas/:id/venda` | Recebe `{ "quantidade": 2 }` e diminui o estoque | `200` |
 | `GET` | `/plantas/estoque/valor-total` | Soma `preco × estoque` e o total de vasos: `{ "valorTotalEmCentavos": 154300, "totalDeVasos": 37 }` | `200` |
 
+---
+
 ## 3. Regras de negócio
 
 1. Todos os campos são obrigatórios no cadastro. Na edição, nenhum é, mas os que vierem passam pelas mesmas regras.
@@ -46,11 +48,13 @@ O CRUD de usuários deste repositório (`UserController.ts` e `UserRepository.ts
 6. Um `id` que não existe retorna `404`.
 7. A venda nunca deixa o estoque negativo: sem estoque suficiente, retorna `400` e não altera nada.
 
+---
+
 ## 4. Bônus (só depois do obrigatório)
 
 - 🔎 Busca por nome sem diferenciar maiúsculas: `?nome=costela`
 - ↕️ Ordenação: `?ordem=preco` ou `?ordem=nome`
-- 🏷️ Rota `GET /plantas/esgotadas` (registrada **antes** de `/plantas/:id`)
+- 🏷️ Rota `GET /plantas/esgotadas`, que lista as plantas com estoque zero
 - 🌱 Script de *seed* com plantas de exemplo
 
 Os bônus contam pontos extras, mas não compensam requisitos obrigatórios faltando.
@@ -59,19 +63,18 @@ Os bônus contam pontos extras, mas não compensam requisitos obrigatórios falt
 
 ## 5. Entregáveis
 
-São **dois** entregáveis:
+São **dois**, enviados juntos pelo canal e no prazo informados pelos instrutores.
 
 ### 📦 1. O repositório
 
-- Um repositório **seu**, criado a partir deste pelo botão **Use this template → Create a new repository** no GitHub, com a API implementada.
-- Sobe do zero com `docker compose up` + `yarn migration`, com a migration da `Planta` commitada.
-- Nomes de campos e rotas iguais aos do enunciado.
+- Criado pelo **Use this template**, com o código na branch `main`.
+- Sobe do zero com `docker compose up -d --build` + `yarn migration`, com a migration da `Planta` commitada.
+- Nomes de campos e rotas iguais aos deste enunciado.
 - `yarn typecheck` sem erros; sem `console.log` de teste, imports sem uso ou código comentado.
 - Commits pequenos e com mensagens claras; `.env` fora do git.
+- Público, ou com acesso liberado para os instrutores.
 
-### 📝 2. O documento (docs)
-
-Além do código, entreguem um **documento de documentação da API**, enviado junto com o link do repositório. Ele deve ter:
+### 📝 2. O documento da API
 
 - **Visão geral:** o que a API faz e a stack usada.
 - **Como rodar:** passo a passo para subir o projeto do zero.
@@ -91,9 +94,7 @@ Além do código, entreguem um **documento de documentação da API**, enviado j
 | **Validações** | Regras respeitadas, mensagens claras |
 | **Organização** | Controller e repository separados |
 | **Prisma** | Model, migration, `where` e enum |
-| **Código limpo** | Nomes claros, sem código morto |
+| **Código limpo** | Nomes claros, sem código morto, commits organizados |
 | **Documento** | Completo, claro e fiel ao que a API realmente faz |
-
-Para entregar: envie o link do **seu** repositório **e o documento** pelo canal e no prazo informados pelos instrutores. Confira se o repositório está público (ou se os instrutores têm acesso).
 
 Boa sorte e boas regas! 🪴
