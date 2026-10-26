@@ -63,7 +63,7 @@ São **dois** entregáveis:
 
 ### 📦 1. O repositório
 
-- Branch `desafio/<seu-nome>` com a API implementada.
+- Um repositório **seu**, criado a partir deste pelo botão **Use this template → Create a new repository** no GitHub, com a API implementada.
 - Sobe do zero com `docker compose up` + `yarn migration`, com a migration da `Planta` commitada.
 - Nomes de campos e rotas iguais aos do enunciado.
 - `yarn typecheck` sem erros; sem `console.log` de teste, imports sem uso ou código comentado.
@@ -94,6 +94,6 @@ Além do código, entreguem um **documento de documentação da API**, enviado j
 | **Código limpo** | Nomes claros, sem código morto |
 | **Documento** | Completo, claro e fiel ao que a API realmente faz |
 
-Para entregar: suba a branch `desafio/<seu-nome>` e envie o link do repositório **e o documento** pelo canal e no prazo informados pelos instrutores.
+Para entregar: envie o link do **seu** repositório **e o documento** pelo canal e no prazo informados pelos instrutores. Confira se o repositório está público (ou se os instrutores têm acesso).
 
 Boa sorte e boas regas! 🪴
