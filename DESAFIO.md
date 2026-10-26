@@ -4,7 +4,7 @@ A **Folhagem & Cia** vende plantas pela internet e controla tudo numa planilha. 
 
 O CRUD de usuários deste repositório (`UserController.ts` e `UserRepository.ts`) é o modelo: quase tudo que vocês vão fazer nas plantas tem um equivalente lá.
 
-**Para começar:** crie o **seu** repositório pelo botão **Use this template → Create a new repository** no GitHub, clone e siga o [README](README.md) para rodar. O passo a passo, as armadilhas mais comuns e a lista de testes estão no [guia](docs/guia-folhagem-e-cia.pdf).
+**Para começar:** crie o **seu** repositório pelo botão **Use this template → Create a new repository** no GitHub, clone e siga o [README](README.md) para rodar.
 
 ---
 

@@ -10,7 +10,6 @@ API de exemplo com um **CRUD de usuários** para o treinamento de back-end dos a
 |---|---|
 | `README.md` (este) | Como rodar o projeto e como o CRUD de usuários funciona |
 | [`DESAFIO.md`](DESAFIO.md) | O enunciado do desafio Folhagem & Cia: o que construir e entregar |
-| [`docs/guia-folhagem-e-cia.pdf`](docs/guia-folhagem-e-cia.pdf) | Guia de apoio: conceitos, passo a passo, armadilhas e testes |
 
 ---
 
