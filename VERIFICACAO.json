@@ -1,0 +1,55 @@
+{
+  "data_local": "2026-10-29",
+  "repositorio": "https://github.com/carlosroma-dev/treinamento-crud-citi",
+  "upstream": "https://github.com/lucascavalcannti/treinamento-crud-citi",
+  "commit_base": "bd7d2f7eaed3732ecc0d8cc5218366b76a9ce1c3",
+  "branch": "desafio/carlos-roma",
+  "baseline_original_http": 7,
+  "testes_integracao": {
+    "total": 62,
+    "aprovados": 62,
+    "plantas": 55,
+    "regressao_usuarios": 7,
+    "mocks": false,
+    "ambiente": "Docker Node 20 + PostgreSQL 16 + Prisma 5.22"
+  },
+  "compilado_http": {
+    "arquivo": "dist/server.js",
+    "chamadas_aprovadas": 23,
+    "node": "v20.20.2"
+  },
+  "checagens": [
+    "typecheck src e testes",
+    "build SWC",
+    "Prisma schema valido",
+    "subida com volume novo",
+    "duas migrations aplicadas em banco novo",
+    "seed executado duas vezes sem duplicacao",
+    "total comparado com SQL independente"
+  ],
+  "conta_antes": {
+    "valorTotalEmCentavos": 25480,
+    "totalDeVasos": 5
+  },
+  "conta_depois_de_uma_venda": {
+    "valorTotalEmCentavos": 16490,
+    "totalDeVasos": 4
+  },
+  "concorrencia": [
+    {
+      "compras": 2,
+      "estoque_inicial": 1,
+      "vendas": 1,
+      "recusas": 1,
+      "estoque_final": 0
+    },
+    {
+      "compras": 10,
+      "estoque_inicial": 3,
+      "vendas": 3,
+      "recusas": 7,
+      "estoque_final": 0
+    }
+  ],
+  "ia": "Codex (OpenAI), apoio amplo em codigo, testes, revisao e documento"
+}

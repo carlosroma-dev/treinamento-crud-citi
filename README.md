@@ -56,7 +56,7 @@ O `.env` guarda as configurações do projeto e **não vai para o git**. Os valo
 | `SERVER_PORT` | A porta 3001 já está em uso |
 | `DATABASE_PORT` | A porta 5432 já está em uso (por exemplo, por um Postgres instalado na máquina) |
 
-> **Por que o host do banco é `treinamento-crud-db` e não `localhost`?** A API roda *dentro* do Docker e enxerga o banco pelo nome do container. Os comandos que rodam na sua máquina (`yarn migration` e `yarn studio`) trocam o host para `localhost` sozinhos.
+> **Por que o host do banco é `treinamento-crud-db`?** A API roda dentro do Docker e enxerga o banco pelo nome do container. Os comandos locais `yarn migration`, `yarn studio` e `yarn seed` usam `127.0.0.1`. A porta continua sendo a `DATABASE_PORT` do `.env`.
 
 ### Comandos do dia a dia
 
@@ -82,7 +82,8 @@ prisma/
   schema.prisma          # Models (tabelas) do banco
   migrations/            # Histórico de mudanças no banco, gerado pelo yarn migration
 src/
-  server.ts              # Cria o app Express e sobe o servidor
+  app.ts                 # Configura o Express, as rotas e os erros HTTP
+  server.ts              # Abre a porta HTTP e encerra as conexoes ao sair
   routes.ts              # Liga cada rota HTTP a uma função do controller
   database/index.ts      # Conexão com o banco (Prisma Client)
   controllers/           # Recebe a requisição, valida e responde
@@ -154,3 +155,82 @@ Para o `PATCH`, envie só o que vai mudar: `{ "nome": "Maria S. Silva" }`.
 | `SyntaxError: ... is not valid JSON` ou `req.body` chega `undefined` | O corpo não foi como JSON. Cole o JSON puro em **Body → JSON**. |
 
 > Dica: rode `yarn typecheck` antes de testar. A API não mostra erros de tipo ao rodar, mas o `typecheck` mostra todos de uma vez.
+
+---
+
+## Folhagem & Cia - implementacao do desafio
+
+O trabalho foi feito no fork `carlosroma-dev/treinamento-crud-citi`, a partir de `lucascavalcannti/treinamento-crud-citi`, commit `bd7d2f7`. Os arquivos de Controller e Repository de usuarios, o singleton do banco, o model User, o enum Conta e a migration original foram preservados.
+
+O codigo e os documentos tiveram apoio amplo do Codex (OpenAI), incluindo implementacao, testes e revisoes. Veja o relato e a documentacao completa da API em [RELATORIO.md](RELATORIO.md) ou [RELATORIO.pdf](RELATORIO.pdf).
+
+O container espera o banco ficar pronto e gera o Prisma Client antes de iniciar o modo de desenvolvimento. Ao mudar o schema com o ambiente ja rodando, aplique a migration, gere tambem o client do container e reinicie o servidor para carregar o cliente novo:
+
+```powershell
+yarn migration
+docker compose exec -T server yarn generate
+docker compose restart server
+```
+
+### Planta e rotas
+
+Cadastro JSON de exemplo (dados ficticios):
+
+```json
+{
+  "nome": "Planta exemplo A",
+  "especie": "Exemplo A",
+  "preco": 8990,
+  "estoque": 2,
+  "luminosidade": "MEIA_SOMBRA",
+  "petFriendly": false,
+  "regaACadaDias": 3
+}
+```
+
+| Metodo | Caminho | Sucesso |
+| --- | --- | --- |
+| POST | /plantas | 201, planta completa |
+| GET | /plantas | 200, lista de plantas |
+| GET | /plantas/:id | 200, planta completa |
+| PATCH | /plantas/:id | 200, planta atualizada |
+| DELETE | /plantas/:id | 204, sem corpo |
+| POST | /plantas/:id/venda | 200, planta com estoque atualizado |
+| GET | /plantas/estoque/valor-total | 200, valorTotalEmCentavos e totalDeVasos |
+| GET | /plantas/esgotadas | 200, lista com estoque zero |
+
+Venda recebe `{"quantidade":1}`. PATCH recebe apenas os campos que mudam, por exemplo `{"preco":9500}`. Id e datas sao automaticos. Preco e inteiro positivo em centavos, estoque e inteiro nao negativo, regaACadaDias e inteiro positivo; textos nao podem ficar vazios e petFriendly aceita booleano real. Luminosidade aceita SOMBRA, MEIA_SOMBRA ou SOL_PLENO. Inteiros respeitam Int32.
+
+Filtros opcionais, combinaveis na listagem e nas esgotadas: `?luminosidade=MEIA_SOMBRA&petFriendly=false&nome=exemplo&ordem=preco`. Nome procura trecho sem diferenciar maiusculas; ordem aceita preco ou nome, em ordem crescente, com id no desempate. Filtro valido sem resultado devolve `[]` com 200.
+
+Erros de plantas usam `{"message":"..."}`. Dados, ids e filtros invalidos retornam 400; id valido inexistente, 404; erro inesperado, 500. Campos extras, PATCH vazio e filtros repetidos tambem sao recusados com 400. A venda usa condicao de saldo e decremento na mesma escrita, dentro de uma transacao: se nao houver estoque, retorna 400 e nao altera o registro.
+
+O total usa BigInt e devolve numeros inteiros JSON exatos. Acima de Number.MAX_SAFE_INTEGER, o cliente precisa preservar a precisao ao ler o JSON: JSON.parse convencional pode arredondar valores muito altos no cliente.
+
+### Seed
+
+```powershell
+yarn seed
+```
+
+Em banco vazio, cria tres plantas ficticias, cinco vasos e 25480 centavos em estoque. Uma segunda execucao sequencial nao duplica os exemplos nem sobrescreve os existentes. Os dados de cuidado e seguranca animal sao demonstrativos. Se voce editar os exemplos, os totais podem mudar.
+
+### Testes de integracao
+
+Os testes usam Express e PostgreSQL real, sem mocks. Eles limpam as tabelas Planta e User em um banco dedicado. Uma protecao recusa limpeza se o nome do banco nao contiver `folhagem_test`.
+
+No PowerShell, com a configuracao padrao do `.env.example`:
+
+```powershell
+docker compose exec -T db createdb -U postgres -p 5432 folhagem_test
+$env:DATABASE_URL = 'postgresql://postgres:docker@127.0.0.1:5432/folhagem_test?schema=public'
+yarn migration:deploy
+yarn test
+Remove-Item Env:\DATABASE_URL
+yarn typecheck
+yarn build
+```
+
+Se o banco de testes ja existir, nao repita o createdb. Se mudar porta, usuario ou senha no `.env`, ajuste esses comandos tambem. Nao use o banco principal para testes que limpam dados.
+
+A suite tem 62 testes: 55 de plantas e 7 de regressao dos usuarios, incluindo JSON primitivo recusado com 400. A verificacao manual do seed e a subida com volume novo foram feitas separadamente da suite. O relatorio registra os resultados e as dificuldades reais.
