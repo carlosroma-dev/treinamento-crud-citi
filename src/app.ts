@@ -5,7 +5,7 @@ import routes from "./routes";
 const app = express();
 app.disable("x-powered-by");
 app.set("query parser", "simple");
-app.use(express.json({ limit: "100kb", strict: false }));
+app.use(express.json({ limit: "100kb" }));
 app.use(routes);
 app.use((_req, res) => {
   res.status(404).json({ message: "Rota nao encontrada." });
