@@ -6,13 +6,18 @@
   "scripts": {
     "dev": "concurrently \"ts-node-dev --poll --exit-child -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --no-notify src/server.ts\" \"prisma generate --watch\"",
     "generate": "prisma generate",
-    "migration": "cross-env DATABASE_HOST=localhost prisma migrate dev",
+    "migration": "cross-env DATABASE_HOST=127.0.0.1 prisma migrate dev",
     "migration:deploy": "prisma migrate deploy",
-    "studio": "cross-env DATABASE_HOST=localhost prisma studio",
-    "typecheck": "tsc --noEmit",
+    "studio": "cross-env DATABASE_HOST=127.0.0.1 prisma studio",
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.tests.json",
     "build": "swc src --strip-leading-paths --out-dir dist",
     "start": "node dist/server.js",
-    "prod": "yarn migration:deploy && yarn build && yarn start"
+    "prod": "yarn migration:deploy && yarn build && yarn start",
+    "test": "vitest run",
+    "seed": "cross-env DATABASE_HOST=127.0.0.1 prisma db seed"
+  },
+  "prisma": {
+    "seed": "ts-node --transpile-only prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "5.22.0",
@@ -26,11 +31,14 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/express": "^4.17.21",
     "@types/node": "^20.17.6",
+    "@types/supertest": "6.0.3",
     "concurrently": "^9.1.0",
     "cross-env": "^7.0.3",
     "prisma": "5.22.0",
+    "supertest": "7.1.4",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "3.2.4"
   }
 }
