@@ -6,7 +6,7 @@ RUN apt-get update -y && apt-get install -y openssl && rm -rf /var/lib/apt/lists
 WORKDIR /home/node/app
 
 COPY package.json yarn.loc[k] ./
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 COPY . .
 RUN yarn generate
@@ -16,4 +16,4 @@ USER node
 
 EXPOSE 3001
 
-CMD [ "yarn", "dev" ]
+CMD [ "sh", "-c", "yarn generate && yarn dev" ]

@@ -7,5 +7,6 @@ docker-compose.yml
 .gitignore
 .env
 *.md
+*.pdf
 dist
 .vscode
