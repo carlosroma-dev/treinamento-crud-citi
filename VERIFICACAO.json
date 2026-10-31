@@ -1,31 +1,33 @@
 {
-  "data_local": "2026-10-29",
+  "data_local": "2026-10-31",
   "repositorio": "https://github.com/carlosroma-dev/treinamento-crud-citi",
   "upstream": "https://github.com/lucascavalcannti/treinamento-crud-citi",
   "commit_base": "bd7d2f7eaed3732ecc0d8cc5218366b76a9ce1c3",
   "branch": "desafio/carlos-roma",
   "baseline_original_http": 7,
   "testes_integracao": {
-    "total": 62,
-    "aprovados": 62,
-    "plantas": 55,
+    "total": 65,
+    "aprovados": 65,
+    "plantas": 58,
     "regressao_usuarios": 7,
     "mocks": false,
-    "ambiente": "Docker Node 20 + PostgreSQL 16 + Prisma 5.22"
+    "ambiente": "Windows, Node 24.15.0, PostgreSQL 16.15 real isolado e Prisma 5.22"
   },
   "compilado_http": {
     "arquivo": "dist/server.js",
     "chamadas_aprovadas": 23,
-    "node": "v20.20.2"
+    "node": "v24.15.0"
   },
   "checagens": [
     "typecheck src e testes",
     "build SWC",
     "Prisma schema valido",
-    "subida com volume novo",
     "duas migrations aplicadas em banco novo",
+    "65 testes de integracao aprovados",
+    "23 chamadas HTTP ao compilado aprovadas",
     "seed executado duas vezes sem duplicacao",
-    "total comparado com SQL independente"
+    "total comparado com SQL independente",
+    "regressao de busca literal reproduzida antes e corrigida depois"
   ],
   "conta_antes": {
     "valorTotalEmCentavos": 25480,
@@ -51,5 +53,28 @@
       "estoque_final": 0
     }
   ],
-  "ia": "Codex (OpenAI), apoio amplo em codigo, testes, revisao e documento"
+  "ia": "Codex (OpenAI), apoio no desenvolvimento, revisao da logica, testes e revisao do material; validacao final feita pelo candidato.",
+  "busca_literal": {
+    "caracteres": [
+      "%",
+      "_",
+      "\\"
+    ],
+    "antes_da_correcao": {
+      "testes_executados": 3,
+      "falhas": 3
+    },
+    "apos_correcao": {
+      "testes_executados": 3,
+      "aprovados": 3
+    },
+    "incluidos_nos_65": true
+  },
+  "verificacao_anterior": {
+    "data_local": "2026-10-29",
+    "ambiente": "Docker Node 20 + PostgreSQL 16 + Prisma 5.22",
+    "testes_aprovados": 62,
+    "subida_com_volume_novo": true,
+    "chamadas_http_compilado": 23
+  }
 }

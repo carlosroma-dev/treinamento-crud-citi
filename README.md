@@ -162,7 +162,9 @@ Para o `PATCH`, envie só o que vai mudar: `{ "nome": "Maria S. Silva" }`.
 
 O trabalho foi feito no fork `carlosroma-dev/treinamento-crud-citi`, a partir de `lucascavalcannti/treinamento-crud-citi`, commit `bd7d2f7`. Os arquivos de Controller e Repository de usuarios, o singleton do banco, o model User, o enum Conta e a migration original foram preservados.
 
-O codigo e os documentos tiveram apoio amplo do Codex (OpenAI), incluindo implementacao, testes e revisoes. Veja o relato e a documentacao completa da API em [RELATORIO.md](RELATORIO.md) ou [RELATORIO.pdf](RELATORIO.pdf).
+Usei o Codex, da OpenAI, como apoio no desenvolvimento, na revisao da logica, nos testes e na revisao do material. Conferi o codigo e os resultados, avaliei as sugestoes e validei a versao final antes da entrega. Veja o relato e a documentacao completa da API em [RELATORIO.md](RELATORIO.md) ou [RELATORIO.pdf](RELATORIO.pdf).
+
+Aprendi que um sistema profissional vai alem de escrever codigo. A organizacao, as validacoes, os testes e a documentacao fazem parte da entrega, porque outra pessoa precisa conseguir rodar, entender e confiar no que foi feito.
 
 O container espera o banco ficar pronto e gera o Prisma Client antes de iniciar o modo de desenvolvimento. Ao mudar o schema com o ambiente ja rodando, aplique a migration, gere tambem o client do container e reinicie o servidor para carregar o cliente novo:
 
@@ -201,7 +203,7 @@ Cadastro JSON de exemplo (dados ficticios):
 
 Venda recebe `{"quantidade":1}`. PATCH recebe apenas os campos que mudam, por exemplo `{"preco":9500}`. Id e datas sao automaticos. Preco e inteiro positivo em centavos, estoque e inteiro nao negativo, regaACadaDias e inteiro positivo; textos nao podem ficar vazios e petFriendly aceita booleano real. Luminosidade aceita SOMBRA, MEIA_SOMBRA ou SOL_PLENO. Inteiros respeitam Int32.
 
-Filtros opcionais, combinaveis na listagem e nas esgotadas: `?luminosidade=MEIA_SOMBRA&petFriendly=false&nome=exemplo&ordem=preco`. Nome procura trecho sem diferenciar maiusculas; ordem aceita preco ou nome, em ordem crescente, com id no desempate. Filtro valido sem resultado devolve `[]` com 200.
+Filtros opcionais, combinaveis na listagem e nas esgotadas: `?luminosidade=MEIA_SOMBRA&petFriendly=false&nome=exemplo&ordem=preco`. Nome procura trecho literal sem diferenciar maiusculas, inclusive quando contem `%`, `_` ou barra invertida; ordem aceita preco ou nome, em ordem crescente, com id no desempate. Filtro valido sem resultado devolve `[]` com 200.
 
 Erros de plantas usam `{"message":"..."}`. Dados, ids e filtros invalidos retornam 400; id valido inexistente, 404; erro inesperado, 500. Campos extras, PATCH vazio e filtros repetidos tambem sao recusados com 400. A venda usa condicao de saldo e decremento na mesma escrita, dentro de uma transacao: se nao houver estoque, retorna 400 e nao altera o registro.
 
@@ -233,4 +235,4 @@ yarn build
 
 Se o banco de testes ja existir, nao repita o createdb. Se mudar porta, usuario ou senha no `.env`, ajuste esses comandos tambem. Nao use o banco principal para testes que limpam dados.
 
-A suite tem 62 testes: 55 de plantas e 7 de regressao dos usuarios, incluindo JSON primitivo recusado com 400. A verificacao manual do seed e a subida com volume novo foram feitas separadamente da suite. O relatorio registra os resultados e as dificuldades reais.
+A suite tem 65 testes: 58 de plantas e 7 de regressao dos usuarios, incluindo JSON primitivo recusado com 400 e busca literal por `%`, `_` e barra invertida. A verificacao manual do seed, as migrations em banco novo e as chamadas ao compilado foram feitas separadamente da suite. A subida Docker com volume novo foi conferida na etapa inicial; a revisao final repetiu os testes com PostgreSQL 16 local isolado. Os resultados estao em [VERIFICACAO.json](VERIFICACAO.json), e o relatorio registra as decisoes e as dificuldades reais.

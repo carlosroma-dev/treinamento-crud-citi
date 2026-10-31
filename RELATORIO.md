@@ -49,7 +49,7 @@ Requisicoes e respostas usam JSON (Content-Type: application/json). :id e inteir
 
 T, para preco/estoque 8990/2 e 2500/3: {"valorTotalEmCentavos":25480,"totalDeVasos":5}. Loja vazia: ambos zero.
 
-Filtros combinaveis: luminosidade, petFriendly=true ou false, nome por trecho sem diferenciar maiusculas e ordem=preco ou nome, crescente. Exemplo: /plantas?luminosidade=MEIA_SOMBRA&petFriendly=false. Filtro valido sem resultado retorna 200 com [].
+Filtros combinaveis: luminosidade, petFriendly=true ou false, nome por trecho literal sem diferenciar maiusculas e ordem=preco ou nome, crescente. Exemplo: /plantas?luminosidade=MEIA_SOMBRA&petFriendly=false. Filtro valido sem resultado retorna 200 com [].
 
 400 indica dado invalido ou estoque insuficiente; 404, planta inexistente; 500, falha inesperada em qualquer rota. Exemplo: {"message":"Planta nao encontrada."}. Campos extras, PATCH vazio e filtros repetidos tambem retornam 400.
 
@@ -59,7 +59,7 @@ Segui a ordem model/migration, repository, controller, rotas e testes. O control
 
 A venda condiciona o decremento a estoque >= quantidade, na mesma escrita e em transacao com a leitura de retorno. A recusa nao altera o registro. O total usa BigInt e inteiros JSON exatos; acima do limite seguro de Number, o cliente precisa preservar a precisao na leitura.
 
-Passaram 62 testes com PostgreSQL real (55 de plantas e 7 de usuarios), typecheck, build, subida com volume novo e 23 chamadas ao codigo compilado. Duas compras do ultimo vaso deram uma venda e uma recusa; dez compras para tres vasos deram tres vendas e sete recusas. Os testes tambem conferiram a preservacao dos dados em recusas e no PATCH.
+Passaram 65 testes com PostgreSQL real (58 de plantas e 7 de usuarios), typecheck, build, migrations em banco novo e 23 chamadas ao codigo compilado. Duas compras do ultimo vaso deram uma venda e uma recusa; dez compras para tres vasos deram tres vendas e sete recusas. Os testes tambem conferiram a preservacao dos dados em recusas e no PATCH, alem da busca literal por %, _ e barra invertida.
 
 A conta foi refeita por outro caminho: 8990 x 2 + 2500 x 3 = 25480 centavos e 5 vasos. Apos vender um vaso de 8990, restaram 16490 centavos e 4 vasos. O seed rodou duas vezes sem duplicar exemplos, e seu total foi conferido por SQL.
 
@@ -67,4 +67,6 @@ A conta foi refeita por outro caminho: 8990 x 2 + 2500 x 3 = 25480 centavos e 5 
 
 O volume do Docker tinha um Prisma Client que conhecia apenas User. Gerar o client no container e reiniciar resolveu. A inicializacao passou a gera-lo antes de subir a API. A revisao tambem preservou o parser JSON estrito dos usuarios.
 
-Usei o Codex, da OpenAI, como apoio na revisao da logica, nos testes e na revisao do material. Conferi o codigo e os resultados, avaliei as sugestoes e validei a versao final antes da entrega.
+Usei o Codex, da OpenAI, como apoio no desenvolvimento, na revisao da logica, nos testes e na revisao do material. Conferi o codigo e os resultados, avaliei as sugestoes e validei a versao final antes da entrega.
+
+Aprendi que um sistema profissional vai alem de escrever codigo. A organizacao, as validacoes, os testes e a documentacao fazem parte da entrega, porque outra pessoa precisa conseguir rodar, entender e confiar no que foi feito.
