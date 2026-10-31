@@ -8,11 +8,13 @@ export function createPlanta(data: PlantaInput) {
 }
 
 export function findAllPlantas(filters: PlantaFilters, esgotadas = false) {
+  // A busca e literal: estes caracteres nao devem virar curingas do ILIKE.
+  const nome = filters.nome?.replace(/[\\%_]/g, "\\$&");
   const where: Prisma.PlantaWhereInput = {
     luminosidade: filters.luminosidade,
     petFriendly: filters.petFriendly,
     estoque: esgotadas ? 0 : undefined,
-    nome: filters.nome === undefined ? undefined : { contains: filters.nome, mode: "insensitive" },
+    nome: nome === undefined ? undefined : { contains: nome, mode: "insensitive" },
   };
   const orderBy: Prisma.PlantaOrderByWithRelationInput[] = filters.ordem
     ? [{ [filters.ordem]: "asc" }, { id: "asc" }]

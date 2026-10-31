@@ -376,6 +376,19 @@ describe("valor total do estoque", () => {
 });
 
 describe("bonus", () => {
+  it.each([
+    ["%", "Folha 100% verde", "Folha 100 verde"],
+    ["A_B", "Planta A_B", "Planta A1B"],
+    ["A\\B", "Planta A\\B", "Planta AB"]
+  ])("busca %s como texto literal, sem curingas SQL", async (nome, correspondente, outra) => {
+    const planta = await insert({ nome: correspondente });
+    await insert({ nome: outra });
+    await insert({ nome: "Outro exemplo" });
+    const response = await request(app).get("/plantas").query({ nome });
+    expect(response.status).toBe(200);
+    expect(response.body.map((item: { id: number }) => item.id)).toEqual([planta.id]);
+  });
+
   it("busca trecho do nome sem diferenciar maiusculas e combina filtros", async () => {
     const a = await insert({ nome: "Folha Alfa", petFriendly: true });
     await insert({ nome: "Outra folha", petFriendly: false });
