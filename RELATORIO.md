@@ -67,4 +67,4 @@ A conta foi refeita por outro caminho: 8990 x 2 + 2500 x 3 = 25480 centavos e 5 
 
 O volume do Docker tinha um Prisma Client que conhecia apenas User. Gerar o client no container e reiniciar resolveu. A inicializacao passou a gera-lo antes de subir a API. A revisao tambem preservou o parser JSON estrito dos usuarios.
 
-Usei Codex, da OpenAI, amplamente no codigo, testes, revisoes e documento. Conferi cruzando requisitos, testes no banco e contas independentes. Ficou claro o cuidado com 0/false, PATCH parcial e venda atomica. Ainda preciso fazer minha leitura pessoal para explicar cada parte; os testes nao substituem isso.
+Usei o Codex, da OpenAI, como apoio na revisao da logica, nos testes e na revisao do material. Conferi o codigo e os resultados, avaliei as sugestoes e validei a versao final antes da entrega.
